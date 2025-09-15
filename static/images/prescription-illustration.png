@@ -1,0 +1,14 @@
+<svg width="500" height="400" xmlns="http://www.w3.org/2000/svg">
+    <rect width="500" height="400" fill="#f1f1f1"/>
+    <rect x="50" y="50" width="400" height="300" fill="white" stroke="#3a7bd5" stroke-width="2"/>
+    <line x1="50" y1="100" x2="450" y2="100" stroke="#3a7bd5" stroke-width="2"/>
+    <text x="75" y="85" font-family="Arial" font-size="20" fill="#3a7bd5">Medical Prescription</text>
+    <line x1="100" y1="140" x2="400" y2="140" stroke="#adb5bd" stroke-width="1"/>
+    <line x1="100" y1="180" x2="400" y2="180" stroke="#adb5bd" stroke-width="1"/>
+    <line x1="100" y1="220" x2="400" y2="220" stroke="#adb5bd" stroke-width="1"/>
+    <line x1="100" y1="260" x2="400" y2="260" stroke="#adb5bd" stroke-width="1"/>
+    <text x="70" y="135" font-family="Arial" font-size="14" fill="#212529">Rx</text>
+    <circle cx="60" cy="250" r="25" fill="#00d1b2" opacity="0.3"/>
+    <circle cx="410" cy="80" r="15" fill="#ff6b6b" opacity="0.3"/>
+    <circle cx="430" cy="320" r="20" fill="#3a7bd5" opacity="0.3"/>
+</svg>

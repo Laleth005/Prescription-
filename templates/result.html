@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis Results - Prescription Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-notes-medical"></i> Prescription Analyzer</h1>
+            <nav>
+                <a href="{{ url_for('index') }}">Home</a>
+                <a href="{{ url_for('upload') }}">Upload New</a>
+            </nav>
+        </header>
+        
+        <main>
+            <div class="result-section">
+                <h2>Prescription Analysis Results</h2>
+                
+                <div class="result-container">
+                    <div class="result-image">
+                        {% if image_path %}
+                            <img src="{{ url_for('static', filename='uploads/' + image_path) }}" alt="Uploaded Prescription" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22300%22%20height%3D%22300%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22300%22%20height%3D%22300%22%20fill%3D%22%23f1f1f1%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-family%3D%22Arial%22%20font-size%3D%2220%22%20fill%3D%22%23888%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%3EPrescription%20Image%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                        {% else %}
+                            <div class="no-image">
+                                <i class="fas fa-image"></i>
+                                <p>No image available</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="result-info">
+                        <div class="result-status {% if is_original %}status-original{% else %}status-fake{% endif %}">
+                            {% if is_original %}
+                                <i class="fas fa-check-circle"></i>
+                                <h3>Original Prescription</h3>
+                                <div class="confidence-bar">
+                                    <div class="confidence-level" id="confidence-original"></div>
+                                </div>
+                                <p>Confidence: {{ confidence }}%</p>
+                                <script>
+                                    document.getElementById('confidence-original').style.width = "{{ confidence }}%";
+                                </script>
+                            {% else %}
+                                <i class="fas fa-times-circle"></i>
+                                <h3>Potentially Fake Prescription</h3>
+                                <div class="confidence-bar fake">
+                                    <div class="confidence-level" id="confidence-fake"></div>
+                                </div>
+                                <script>
+                                    document.getElementById('confidence-fake').style.width = "{{ confidence }}%";
+                                </script>
+                                <p>Confidence: {{ confidence }}%</p>
+                                
+                                {% if flags %}
+                                    <div class="flags">
+                                        <h4>Issues detected:</h4>
+                                        <ul>
+                                            {% for flag in flags %}
+                                                <li><i class="fas fa-exclamation-triangle"></i> {{ flag }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="result-summary">
+                            <h4>Prescription Summary</h4>
+                            
+                            <div class="summary-item">
+                                <div class="summary-icon">
+                                    <i class="fas fa-hospital"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <h5>Hospital/Clinic</h5>
+                                    <p>{{ analysis.details.hospital_name or 'Not detected' }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="summary-item">
+                                <div class="summary-icon">
+                                    <i class="fas fa-user-md"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <h5>Doctor</h5>
+                                    <p>{{ analysis.details.doctor_name or 'Not detected' }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="summary-item">
+                                <div class="summary-icon">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <h5>Patient</h5>
+                                    <p>{{ analysis.details.patient_name or 'Not detected' }}</p>
+                                </div>
+                            </div>
+                            
+                            <div class="summary-item">
+                                <div class="summary-icon">
+                                    <i class="fas fa-pills"></i>
+                                </div>
+                                <div class="summary-content">
+                                    <h5>Medicines</h5>
+                                    <p>{{ analysis.details.medicines|length or 0 }} medicines prescribed</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <a href="{{ url_for('details') }}" class="btn secondary-btn">
+                            <i class="fas fa-list-ul"></i> See More Details
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="disclaimer">
+                    <h4><i class="fas fa-info-circle"></i> Disclaimer</h4>
+                    <p>This analysis is based on automated text detection and may not be 100% accurate. Always consult a healthcare professional for verification of medical prescriptions.</p>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 Prescription Analyzer. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

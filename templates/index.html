@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prescription Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-notes-medical"></i> Prescription Analyzer</h1>
+            <p>Upload and analyze your prescription to verify its authenticity</p>
+        </header>
+        
+        <main>
+            <div class="hero-section">
+                <div class="hero-content">
+                    <h2>Verify Your Prescription's Authenticity</h2>
+                    <p>Our advanced AI-powered system can detect fake prescriptions by analyzing key elements and patterns.</p>
+                    <div class="features">
+                        <div class="feature">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Instant Analysis</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-shield-alt"></i>
+                            <p>Secure Processing</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-info-circle"></i>
+                            <p>Detailed Reports</p>
+                        </div>
+                    </div>
+                    <a href="{{ url_for('upload') }}" class="btn primary-btn">
+                        <i class="fas fa-file-upload"></i> Upload My Prescription
+                    </a>
+                </div>
+                <div class="hero-image">
+                    <img src="{{ url_for('static', filename='images/prescription-illustration.png') }}" alt="Prescription Illustration" onerror="this.src='data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22300%22%20height%3D%22300%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Crect%20width%3D%22300%22%20height%3D%22300%22%20fill%3D%22%23f1f1f1%22%2F%3E%3Ctext%20x%3D%2250%25%22%20y%3D%2250%25%22%20font-family%3D%22Arial%22%20font-size%3D%2220%22%20fill%3D%22%23888%22%20text-anchor%3D%22middle%22%20dominant-baseline%3D%22middle%22%3EPrescription%20Illustration%3C%2Ftext%3E%3C%2Fsvg%3E'">
+                </div>
+            </div>
+            
+            <div class="how-it-works">
+                <h2>How It Works</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-icon">
+                            <i class="fas fa-upload"></i>
+                        </div>
+                        <h3>Upload</h3>
+                        <p>Upload your prescription image</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <h3>Analyze</h3>
+                        <p>Our system extracts and analyzes text</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">
+                            <i class="fas fa-check-double"></i>
+                        </div>
+                        <h3>Verify</h3>
+                        <p>Get instant verification results</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">
+                            <i class="fas fa-list-ul"></i>
+                        </div>
+                        <h3>Details</h3>
+                        <p>View comprehensive prescription details</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 Prescription Analyzer. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Prescription - Prescription Analyzer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-notes-medical"></i> Prescription Analyzer</h1>
+            <nav>
+                <a href="{{ url_for('index') }}">Home</a>
+            </nav>
+        </header>
+        
+        <main>
+            <div class="upload-section">
+                <h2>Upload Your Prescription</h2>
+                <p>Upload a clear image of your prescription for analysis</p>
+                
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="alert alert-error">
+                            {% for message in messages %}
+                                <p>{{ message }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                
+                <form action="{{ url_for('upload') }}" method="post" enctype="multipart/form-data" id="upload-form">
+                    <div class="file-upload">
+                        <div class="file-upload-placeholder" id="file-preview">
+                            <i class="fas fa-file-medical"></i>
+                            <p>Drag and drop your prescription image here, or click to browse</p>
+                            <span>Supported formats: JPG, PNG, JPEG, PDF</span>
+                        </div>
+                        <input type="file" id="prescription" name="prescription" accept=".png,.jpg,.jpeg,.pdf" required>
+                    </div>
+                    
+                    <div class="upload-tips">
+                        <h3>Tips for best results:</h3>
+                        <ul>
+                            <li>Upload a clear, well-lit image of the prescription</li>
+                            <li>Ensure all text is visible and not cropped</li>
+                            <li>Avoid glare or shadows on the prescription</li>
+                            <li>The entire prescription should be in the frame</li>
+                        </ul>
+                    </div>
+                    
+                    <button type="submit" class="btn primary-btn">
+                        <i class="fas fa-search"></i> Analyze Prescription
+                    </button>
+                </form>
+                
+                <div class="loading-overlay" id="loading-overlay">
+                    <div class="loading-content">
+                        <div class="loading-spinner"></div>
+                        <p>Analyzing your prescription...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 Prescription Analyzer. All rights reserved.</p>
+        </footer>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+    <script>
+        // File preview functionality
+        document.getElementById('prescription').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const preview = document.getElementById('file-preview');
+                preview.innerHTML = '';
+                
+                if (file.type.startsWith('image/')) {
+                    const img = document.createElement('img');
+                    img.classList.add('file-preview-image');
+                    img.file = file;
+                    preview.appendChild(img);
+                    
+                    const reader = new FileReader();
+                    reader.onload = (function(aImg) { 
+                        return function(e) { 
+                            aImg.src = e.target.result; 
+                        }; 
+                    })(img);
+                    reader.readAsDataURL(file);
+                } else {
+                    const fileIcon = document.createElement('i');
+                    fileIcon.className = 'fas fa-file-pdf';
+                    preview.appendChild(fileIcon);
+                    
+                    const fileName = document.createElement('p');
+                    fileName.textContent = file.name;
+                    preview.appendChild(fileName);
+                }
+            }
+        });
+        
+        // Loading overlay functionality
+        document.getElementById('upload-form').addEventListener('submit', function() {
+            document.getElementById('loading-overlay').style.display = 'flex';
+        });
+    </script>
+</body>
+</html>
