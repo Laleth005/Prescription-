@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Prescription Details - Prescription Analyzer</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forensic.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -78,6 +79,42 @@
                         </div>
                         
                         <div class="details-card">
+                            <h3><i class="fas fa-id-card-alt"></i> Doctor Verification</h3>
+                            <div class="details-grid">
+                                <div class="detail-item">
+                                    <h4>Registration Number</h4>
+                                    <p>
+                                        {{ analysis.details.registration_number or 'Not detected' }}
+                                        {% if analysis.details.registration_number %}
+                                            {% if analysis.details.registration_verified %}
+                                                <span class="verification-badge verified"><i class="fas fa-check-circle"></i> Verified</span>
+                                            {% else %}
+                                                <span class="verification-badge unverified"><i class="fas fa-exclamation-circle"></i> Unverified</span>
+                                            {% endif %}
+                                        {% endif %}
+                                    </p>
+                                </div>
+                                <div class="detail-item">
+                                    <h4>Medical Council</h4>
+                                    <p>{{ analysis.details.medical_council or 'Not detected' }}</p>
+                                </div>
+                                <div class="detail-item">
+                                    <h4>Contact Number</h4>
+                                    <p>
+                                        {{ analysis.details.phone_number or 'Not detected' }}
+                                        {% if analysis.details.phone_number %}
+                                            {% if analysis.details.phone_verified %}
+                                                <span class="verification-badge verified"><i class="fas fa-check-circle"></i> Verified</span>
+                                            {% else %}
+                                                <span class="verification-badge unverified"><i class="fas fa-exclamation-circle"></i> Unverified</span>
+                                            {% endif %}
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="details-card">
                             <h3><i class="fas fa-pills"></i> Prescribed Medicines</h3>
                             {% if analysis.details.medicines %}
                                 <ul class="medicines-list">
@@ -120,6 +157,203 @@
                                         </li>
                                     {% endfor %}
                                 </ul>
+                            </div>
+                        {% endif %}
+                        
+                        {% if analysis.comprehensive_analysis is defined %}
+                            <div class="details-card forensics-card">
+                                <h3><i class="fas fa-microscope"></i> Advanced Forensic Analysis</h3>
+                                
+                                {% if analysis.comprehensive_analysis.image_forensics is defined %}
+                                <div class="forensic-section">
+                                    <h4>Image Analysis</h4>
+                                    <div class="forensic-details">
+                                        {% if analysis.comprehensive_analysis is defined and analysis.comprehensive_analysis.image_forensics is defined %}
+                                            {% set forensics = analysis.comprehensive_analysis.image_forensics %}
+                                        
+                                            <div class="forensic-item">
+                                                <h5>Metadata Analysis</h5>
+                                                <p>
+                                                    {% if forensics.metadata is defined and forensics.metadata.edited %}
+                                                        <span class="badge warning">Suspicious</span> 
+                                                        Image metadata shows signs of editing
+                                                    {% else %}
+                                                        <span class="badge success">Normal</span>
+                                                        No suspicious metadata detected
+                                                    {% endif %}
+                                                </p>
+                                            </div>
+                                        {% else %}
+                                            <div class="forensic-item">
+                                                <p>Detailed forensics data not available</p>
+                                            </div>
+                                        {% endif %}
+                                        
+                                        {% if analysis.comprehensive_analysis is defined and analysis.comprehensive_analysis.image_forensics is defined %}
+                                            <div class="forensic-item">
+                                                <h5>Error Level Analysis</h5>
+                                                <p>
+                                                    {% if forensics.is_suspicious is defined and forensics.is_suspicious %}
+                                                        <span class="badge warning">Suspicious</span> 
+                                                        Possible image manipulation detected
+                                                    {% else %}
+                                                        <span class="badge success">Normal</span>
+                                                        No signs of manipulation detected
+                                                    {% endif %}
+                                                </p>
+                                            </div>
+                                        {% endif %}
+                                        
+                                        {% if analysis.comprehensive_analysis is defined and analysis.comprehensive_analysis.image_forensics is defined %}
+                                            <div class="forensic-item">
+                                                <h5>Font Consistency</h5>
+                                                <p>
+                                                    {% if forensics.font_consistency is defined and not forensics.font_consistency.consistent_fonts %}
+                                                        <span class="badge warning">Inconsistent</span> 
+                                                        Multiple font types detected
+                                                    {% else %}
+                                                        <span class="badge success">Consistent</span>
+                                                        Font consistency appears normal
+                                                    {% endif %}
+                                                </p>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if analysis.comprehensive_analysis.format_analysis is defined %}
+                                <div class="forensic-section">
+                                    <h4>Format Analysis</h4>
+                                    <div class="forensic-details">
+                                        {% set format = analysis.comprehensive_analysis.format_analysis.analysis %}
+                                        
+                                        <div class="forensic-item">
+                                            <h5>Format Score</h5>
+                                            <div class="mini-progress">
+                                                <div class="mini-progress-bar" id="format-score-bar"></div>
+                                                <script>
+                                                    document.addEventListener('DOMContentLoaded', function() {
+                                                        document.getElementById('format-score-bar').style.width = "{{ format.format_score }}%";
+                                                    });
+                                                </script>
+                                            </div>
+                                            <p>{{ format.format_score }}/100</p>
+                                        </div>
+                                        
+                                        <div class="forensic-item">
+                                            <h5>Format Verdict</h5>
+                                            <p>
+                                                {% if format.format_score >= 80 %}
+                                                    <span class="badge success">Standard Format</span>
+                                                {% elif format.format_score >= 60 %}
+                                                    <span class="badge neutral">Acceptable Format</span>
+                                                {% else %}
+                                                    <span class="badge warning">Non-Standard Format</span>
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                        
+                                        <div class="forensic-item">
+                                            <h5>Missing Elements</h5>
+                                            {% if format.regions_missing %}
+                                                <ul class="mini-list">
+                                                    {% for region in format.regions_missing %}
+                                                        <li>{{ region }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% else %}
+                                                <p>No missing elements</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if analysis.comprehensive_analysis.medication_analysis is defined %}
+                                <div class="forensic-section">
+                                    <h4>Medication Analysis</h4>
+                                    <div class="forensic-details">
+                                        {% set meds = analysis.comprehensive_analysis.medication_analysis %}
+                                        
+                                        {% if meds.is_suspicious %}
+                                            <div class="forensic-item">
+                                                <h5>Suspicious Medications</h5>
+                                                <span class="badge warning">Suspicious</span>
+                                                <p>Potential issues detected with prescribed medications</p>
+                                            </div>
+                                        {% endif %}
+                                        
+                                        {% if meds.drug_interactions.interactions %}
+                                            <div class="forensic-item">
+                                                <h5>Drug Interactions</h5>
+                                                <span class="badge warning">Interactions Found</span>
+                                                <ul class="mini-list">
+                                                    {% for interaction in meds.drug_interactions.interactions %}
+                                                        <li>
+                                                            <strong>{{ interaction.drugs[0] }} + {{ interaction.drugs[1] }}:</strong> 
+                                                            {{ interaction.description }}
+                                                            <span class="severity-badge {{ interaction.severity }}">{{ interaction.severity }}</span>
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        {% endif %}
+                                        
+                                        {% if meds.drug_interactions.controlled_substances %}
+                                            <div class="forensic-item">
+                                                <h5>Controlled Substances</h5>
+                                                <span class="badge neutral">Special Attention</span>
+                                                <ul class="mini-list">
+                                                    {% for substance in meds.drug_interactions.controlled_substances %}
+                                                        <li>
+                                                            <strong>{{ substance.name }}</strong> - 
+                                                            Schedule {{ substance.info.schedule }}
+                                                        </li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endif %}
+                                
+                                {% if analysis.comprehensive_analysis.signature_verification is defined %}
+                                <div class="forensic-section">
+                                    <h4>Signature Analysis</h4>
+                                    <div class="forensic-details">
+                                        {% set sig = analysis.comprehensive_analysis.signature_verification %}
+                                        
+                                        <div class="forensic-item">
+                                            <h5>Signature Detection</h5>
+                                            <p>
+                                                {% if sig.detection_result.signature_detected %}
+                                                    <span class="badge success">Detected</span>
+                                                    Signature found with {{ sig.detection_result.confidence|int }}% confidence
+                                                {% else %}
+                                                    <span class="badge warning">Not Detected</span>
+                                                    No valid signature found on prescription
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                        
+                                        {% if sig.detection_result.signature_detected %}
+                                        <div class="forensic-item">
+                                            <h5>Verification</h5>
+                                            <p>
+                                                {% if sig.verified %}
+                                                    <span class="badge success">Verified</span>
+                                                    Signature appears valid ({{ sig.confidence|int }}% confidence)
+                                                {% else %}
+                                                    <span class="badge warning">Suspicious</span>
+                                                    Signature verification failed
+                                                {% endif %}
+                                            </p>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% endif %}
                             </div>
                         {% endif %}
                     </div>

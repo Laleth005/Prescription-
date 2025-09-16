@@ -1,18 +1,25 @@
 # Prescription Analyzer
 
-A web application that analyzes prescription images to verify their authenticity and extract key information.
+A comprehensive web application that analyzes prescription images to verify their authenticity and extract key information using advanced forensic techniques.
 
 ## Features
 
 - Upload prescription images for analysis
 - Extract text from prescription images using OCR
-- Verify prescription authenticity 
+- Verify prescription authenticity with multiple verification methods:
+  - Image forensic analysis to detect manipulation
+  - Format analysis to verify prescription layout
+  - Drug interaction and controlled substance detection
+  - Doctor registration verification
+  - Signature verification
 - View detailed prescription information including:
   - Hospital/clinic name
-  - Doctor's name
-  - Patient's name
-  - Prescribed medicines
-  - Warnings and precautions
+  - Doctor's name and credentials
+  - Patient's name and information
+  - Prescribed medicines with drug interaction warnings
+  - Controlled substance alerts
+  - Format compliance assessment
+  - Image manipulation detection results
 
 ## Installation
 
@@ -52,13 +59,51 @@ A web application that analyzes prescription images to verify their authenticity
 
 - Python 3.8+
 - Tesseract OCR 4.0+
+- OpenCV 4.5+
 - Modern web browser (Chrome, Firefox, Edge, Safari)
+
+## Advanced Analysis Modules
+
+The system includes several specialized analysis modules:
+
+1. **Image Forensics** (`utils/image_forensics.py`)
+   - Metadata analysis for detecting edited images
+   - Error Level Analysis (ELA) to identify manipulated regions
+   - Font consistency checking to detect text alterations
+   - Signature region detection and analysis
+
+2. **Drug Analysis** (`utils/drug_analysis.py`)
+   - Medication identification and normalization
+   - Drug interaction detection between prescribed medicines
+   - Controlled substance identification and verification
+   - Dosage analysis for suspicious patterns
+
+3. **Format Analysis** (`utils/format_analysis.py`) 
+   - Prescription template verification
+   - Layout analysis of key prescription regions
+   - Standard medical prescription format validation
+   - Consistency checks with known hospital templates
+
+4. **Signature Verification** (`utils/signature_verification.py`)
+   - Automatic signature region detection
+   - Feature extraction and comparison
+   - Signature validity assessment
+   - Consistency analysis with known signatures
+
+5. **Comprehensive Analysis** (`utils/comprehensive_analysis.py`)
+   - Integration of all specialized analysis modules
+   - Weighted scoring system for overall authenticity assessment
+   - Detailed reporting with forensic highlights
 
 ## Technology Stack
 
 - Backend: Python, Flask
 - Text Extraction: Tesseract OCR, OpenCV
-- Frontend: HTML, CSS, JavaScript
+- Image Forensics: OpenCV, Error Level Analysis, Metadata extraction
+- Drug Analysis: Medication pattern matching, interaction detection
+- Format Analysis: Template verification, pattern recognition
+- Signature Verification: Feature extraction, contour analysis
+- Frontend: HTML, CSS, JavaScript, Responsive design
 
 ## License
 

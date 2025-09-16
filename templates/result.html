@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Analysis Results - Prescription Analyzer</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/forensic.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -111,6 +112,58 @@
                                     <p>{{ analysis.details.medicines|length or 0 }} medicines prescribed</p>
                                 </div>
                             </div>
+                            
+                            {% if analysis.details.registration_number %}
+                            <div class="summary-item">
+                                <div class="summary-icon">
+                                    {% if analysis.details.registration_verified %}
+                                        <i class="fas fa-id-card-alt" style="color: #28a745;"></i>
+                                    {% else %}
+                                        <i class="fas fa-id-card-alt" style="color: #dc3545;"></i>
+                                    {% endif %}
+                                </div>
+                                <div class="summary-content">
+                                    <h5>Doctor Registration</h5>
+                                    {% if analysis.details.registration_verified %}
+                                        <p>Verified registration</p>
+                                    {% else %}
+                                        <p>Unverified registration</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            
+                            {% if analysis.forensic_highlights is defined %}
+                            <div class="forensic-highlights">
+                                <h4><i class="fas fa-microscope"></i> Forensic Analysis</h4>
+                                
+                                {% if analysis.forensic_highlights.key_findings %}
+                                <div class="forensic-findings">
+                                    {% for finding in analysis.forensic_highlights.key_findings %}
+                                    <div class="finding-item {{ finding.type }}">
+                                        {% if finding.type == 'forensic' %}
+                                            <i class="fas fa-fingerprint"></i>
+                                        {% elif finding.type == 'medication' %}
+                                            <i class="fas fa-pills"></i>
+                                        {% elif finding.type == 'format' %}
+                                            <i class="fas fa-file-medical"></i>
+                                        {% elif finding.type == 'signature' %}
+                                            <i class="fas fa-signature"></i>
+                                        {% else %}
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                        {% endif %}
+                                        <div class="finding-content">
+                                            <h5>{{ finding.title }}</h5>
+                                            <p>{{ finding.description }}</p>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                                {% else %}
+                                <p>No suspicious forensic findings detected.</p>
+                                {% endif %}
+                            </div>
+                            {% endif %}
                         </div>
                         
                         <a href="{{ url_for('details') }}" class="btn secondary-btn">
